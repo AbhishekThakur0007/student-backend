@@ -5,11 +5,15 @@ const app = express();
 const port = 9999;
 Dbconnection();
 app.use(express.json())
+app.use(express.urlencoded({ extended: true }));
+
 
 app.listen(port,()=>{
-    console.log(`app is working in http//:localhost:${port}`)
+    console.log(`app is working in http://localhost:${port}`)
 })
-
+// app.use("/",(req,res)=>{
+//     res.send("App is working")
+// })
 app.use("/student",studentRoute);
 
 
