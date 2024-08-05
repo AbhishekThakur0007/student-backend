@@ -1,10 +1,14 @@
 import mongoose from "mongoose";
 
+export interface IsStudent extends mongoose.Document{
+  name: string;
+  age: number;
+  email: string;
+  password: string;
+  photo?: string;
+}
+
 const studentSchema = new mongoose.Schema({
-  id: {
-    type: String,
-    required: [true, "id is required"],
-  },
   name: {
     type: String,
     required: [true, "Nmae is required"],
@@ -28,5 +32,6 @@ const studentSchema = new mongoose.Schema({
   },
 });
 
-const studentModel = mongoose.model("Students", studentSchema);
+
+const studentModel = mongoose.model<IsStudent>("Students", studentSchema);
 export default studentModel;

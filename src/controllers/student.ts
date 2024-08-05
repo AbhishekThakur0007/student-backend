@@ -6,10 +6,13 @@ import mongoose from "mongoose";
 import sendVerificationEmail from "../utils/mailer";
 
 import bcrypt from "bcrypt";
-export const studentController = async (req: Request, res: Response) => {
-   const { id, name, age, email, password } = req.body
+
+//******************student create route
+
+export const studentCreateController = async (req: Request, res: Response) => {
+   const { name, age, email, password } = req.body
    const photo = req.file;
-console.log({ id, name, age, email, password });
+console.log({  name, age, email, password });
 console
    
    // gen hash for password 
@@ -21,7 +24,7 @@ console
    try {
      
       const student = await studentModel.create({
-         id, name, photo:photo?.path, age, email, password
+         name, photo:photo?.path, age, email, password
       })
 
       //send email for user to verify the email
@@ -42,4 +45,48 @@ console
       }
 
    }
+}
+
+
+//*****************fetch all student
+
+export const fetchAllStudent =async (req:Request,res:Response)=>{
+
+   const students = await studentModel.find();
+   console.log(students)
+   res.send(students);
+
+}
+
+
+// ******************* update student 
+
+export const updateStudent =async (req:Request,res:Response)=>{
+       const id = req.query;
+       const {name, age, email, password } = req.body;
+       const photo = req.file;
+
+       console.log ({name, age, email, password });
+
+     const students = await studentModel.findOne(id)
+     console.log(students);
+     if(!students){
+       res.status(400).send({msg:"student not found"})
+     }
+        if (name ){ students.name = name;}
+        if (age) students.age = age;
+        if (email) students.email = email;
+        if (password) students.password = password;
+        if (photo) students.photo = photo?.path;
+
+       console.log(students.name);
+}
+
+
+export const deleteStudent =async (req:Request , res:Response)=>{
+   const id = req.query.id;
+console.log(id)
+res.send(req.query.id)
+// const student = await studentModel.findById(id);
+// console.log(student);
 }
