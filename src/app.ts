@@ -2,7 +2,7 @@ import express  from "express";
 import Dbconnection from "./utils/mongo";
 import studentRoute from "./routes/student";
 const app = express();
-const port = 9999;
+const port = 9998;
 Dbconnection();
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
