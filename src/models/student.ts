@@ -6,6 +6,7 @@ export interface IsStudent extends mongoose.Document{
   email: string;
   password: string;
   photo?: string;
+  gender:string;
 }
 
 const studentSchema = new mongoose.Schema({
@@ -28,6 +29,11 @@ const studentSchema = new mongoose.Schema({
   },
   password: {
     type: String,
+    required: [true, "Please fill the password"],
+  },
+  gender: {
+    type: String,
+    enum:["Male", "Female"],
     required: [true, "Please fill the password"],
   },
 });

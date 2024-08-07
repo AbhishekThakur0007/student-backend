@@ -12,9 +12,9 @@ import bcrypt from "bcrypt";
 //******************student create route
 
 export const studentCreateController = async (req: Request, res: Response) => {
-   const { name, age, email, password } = req.body
+   const { name, age, email, password,gender } = req.body
    const photo = req.file;
-console.log({  name, age, email, password });
+console.log({  name, age, email, password,gender });
 console
    
    // gen hash for password 
@@ -26,7 +26,7 @@ console
    try {
      
       const student = await studentModel.create({
-         name, photo:photo?.path, age, email, password
+         name, photo:photo?.path, age, email, password ,gender
       })
 
       //send email for user to verify the email
@@ -54,25 +54,32 @@ console
 
 export const fetchAllStudent =async (req:Request,res:Response)=>{
 
-const {  age ,gender } = req.query;
-
+const  gender  = req.query.gender as string;
+const age = Number(req.query.age);
 const search =  req.query.search as string;
    
 const baseQuery: baseQueryType = {}
 
-try{
+
    if (search){
       baseQuery.name = {
          $regex:search,
          $options:'i'
       }
    }
-
-}catch(error ){
-
+if(age){
+   baseQuery.age = {
+      $gt:age
+   }
+}
+if (gender){
+   baseQuery.gender = {
+      $regex:gender
+   }
 }
 
-   const students = await studentModel.find();
+
+   const students = await studentModel.find(baseQuery);
    console.log(students)
    res.send(students);
 
@@ -84,10 +91,10 @@ try{
 export const updateStudent =async (req:Request,res:Response)=>{
        const {id} = req.params;
        console.log(id)
-       const {name, age, email, password } = req.body;
+       const {name, age, email, password ,gender } = req.body;
        const photo = req.file;
 
-       console.log ({name, age, email, password });
+       console.log ({name, age, email, password,gender });
 
      const students = await studentModel.findById(id)
 
@@ -109,6 +116,7 @@ export const updateStudent =async (req:Request,res:Response)=>{
         if (email) students.email = email;
         if (password) students.password = password;
         if (photo) students.photo = photo?.path;
+        if(gender) students.gender = gender;
 
        await students.save();
        return res.status(200).json({
